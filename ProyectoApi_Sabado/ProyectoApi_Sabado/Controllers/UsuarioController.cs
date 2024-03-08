@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoApi_Sabado.Entidades;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.VisualBasic;
 using Microsoft.AspNetCore.Authorization;
-using ProyectoApi_Sabado.Models;
 using ProyectoApi_Sabado.Services;
 using System.Data.SqlClient;
 using Dapper;
@@ -35,14 +29,14 @@ namespace ProyectoApi_Sabado.Controllers
              return Ok();
         }
 
-        [Authorize]
+
         [HttpPost]
         [Route("RegistrarUsuario")]
         public IActionResult RegistrarUsuario(Usuario entidad)
         {
             using (var db = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                return Ok(db.Execute("sp_RegistrarUsuario", new { entidad.correo, entidad.contrasenna, entidad.nombre }, commandType: CommandType.StoredProcedure));
+                return Ok(db.Execute("RegistrarUsuario", new { entidad.correo, entidad.contrasenna, entidad.nombre }, commandType: CommandType.StoredProcedure));
             }
         }
 

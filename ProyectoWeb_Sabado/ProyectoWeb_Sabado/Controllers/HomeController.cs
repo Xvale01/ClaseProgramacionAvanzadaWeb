@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoWeb_Sabado.Entities;
 using ProyectoWeb_Sabado.Models;
 using ProyectoWeb_Sabado.Services;
 using System.Diagnostics;
@@ -27,9 +28,20 @@ namespace ProyectoWeb_Sabado.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult RegistrarUsuario()
         {
-            HttpContext.Session.Clear();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegistrarUsuario(Usuario entidad)
+        {
+            var resp = _usuarioModel.RegistrarUsuario(entidad);
+
+            if (resp > 0)
+                return RedirectToAction("IniciarSesion", "Home");
+
             return View();
         }
 
