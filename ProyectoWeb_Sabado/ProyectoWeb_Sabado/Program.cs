@@ -1,8 +1,14 @@
+using ProyectoWeb_Sabado.Models;
+using ProyectoWeb_Sabado.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<IUsuarioModel, UsuarioModel>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -23,6 +29,6 @@ app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=PantallaInicio}/{id?}");
+    pattern: "{controller=Home}/{action=IniciarSesion}/{id?}");
 
 app.Run();

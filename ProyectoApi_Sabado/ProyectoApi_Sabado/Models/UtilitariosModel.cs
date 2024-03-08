@@ -13,7 +13,6 @@ namespace ProyectoApi_Sabado.Models
         {
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim("username", cedula));
-            claims.Add(new Claim("userrol", "ADMIN"));
 
             string SecretKey = "erQuPVWaBcnFePyQEGRhDjFCzbtGBLgL";
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
