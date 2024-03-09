@@ -11,7 +11,7 @@ namespace ProyectoApi_Sabado.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController(IConfiguration _configuration, IUtilitariosModel _utilitariosModel) : ControllerBase
+    public class UsuarioController(IConfiguration _configuration, IUtilitariosModel _utilitariosModel, IHostEnvironment _hostEnvironment) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
@@ -75,20 +75,68 @@ namespace ProyectoApi_Sabado.Controllers
                 // Actualiza la contraseña por una contraseña temporal
                 string NuevaContrasennaTemporal = _utilitariosModel.GenerarContraseñaTemporal();
                 string Contrasenna = _utilitariosModel.Encrypt(NuevaContrasennaTemporal);
+                bool EsTemporal = true;
 
                 var resultado = db.Query<Usuario>("RecuperarAcceso",
-                new { entidad.Correo, Contrasenna },
+                new { entidad.Correo, Contrasenna, EsTemporal },
                 commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 if (resultado == null)
                 {
                     respuesta.Codigo = "-1";
-                    respuesta.Mensaje = "Sus credenciales no son correctos";
+                    respuesta.Mensaje = "Sus datos no son correctos";
                 }
                 else
                 {
                     // Enviar el correo
-                    _utilitariosModel.EnviarCorreo(resultado.Correo!, "Nueva Contraseña!!", NuevaContrasennaTemporal);
+
+                    string contenido = Path.Combine(_hostEnvironment.ContentRootPath, "Mails", "RecuperarContrasenna.html");
+                    string htmlBody = System.IO.File.ReadAllText(contenido);
+
+                    htmlBody = htmlBody.Replace("@Usuario@", resultado.NombreUsuario);
+                    htmlBody = htmlBody.Replace("@Contrasenna@", NuevaContrasennaTemporal);
+
+                    _utilitariosModel.EnviarCorreo(resultado.Correo!, "Nueva Contraseña!!", htmlBody);
+                    respuesta.Dato = resultado;
+                }
+
+                return Ok(respuesta);
+
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("CambiarContrasenna")]
+        public IActionResult CambiarContrasenna(Usuario entidad)
+        {
+            using (var db = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                UsuarioRespuesta respuesta = new UsuarioRespuesta();
+
+                // Actualiza la contraseña por una contraseña temporal
+
+                string Contrasenna = _utilitariosModel.Encrypt(entidad.Contrasenna);
+                bool EsTemporal = false;
+
+                var resultado = db.Query<Usuario>("RecuperarAcceso",
+                new { entidad.Correo, Contrasenna, EsTemporal },
+                commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                if (resultado == null)
+                {
+                    respuesta.Codigo = "-1";
+                    respuesta.Mensaje = "Sus datos no son correctos";
+                }
+                else
+                {
+                    // Enviar el correo
+                    string contenido = Path.Combine(_hostEnvironment.ContentRootPath, "Mails" ,"CambioContrasenna.html");
+                    string htmlBody = System.IO.File.ReadAllText(contenido);
+
+                    htmlBody = htmlBody.Replace("@Nombre@", resultado.NombreUsuario);
+
+                    _utilitariosModel.EnviarCorreo(resultado.Correo!, "Cambio de Contraseña!!", "Se le informa que se ha realizado un cambio de contraseña " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
                     respuesta.Dato = resultado;
                 }
 
