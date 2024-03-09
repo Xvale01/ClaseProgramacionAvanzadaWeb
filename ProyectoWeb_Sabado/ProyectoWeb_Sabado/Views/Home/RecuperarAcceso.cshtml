@@ -1,0 +1,49 @@
+﻿@model ProyectoWeb_Sabado.Entities.Usuario
+@{
+    ViewData["Title"] = "IniciarSesion";
+    Layout = "~/Views/Shared/_Layout - Externo.cshtml";
+}
+
+<div class="hold-transition login-page">
+    <div class="login-box">
+
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Recuperar acceso</p>
+
+                @using (Html.BeginForm("RecuperarAcceso", "Home", FormMethod.Post))
+                {
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", @placeholder = "Correo Electrónico", @type = "Email", @required = "true" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (ViewBag.MsjPantalla != null)
+                    {
+                        <div class="alert alert-warning" role="alert" style="text-align:center">
+                            @ViewBag.MsjPantalla
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Procesar</button>
+                        </div>
+                    </div>
+                }
+
+                <div style="text-align:center; margin-top:2%">
+                    <a href="@Url.Action("IniciarSesion","Home")" class="text-center">¿Ya tienes una cuenta?</a>
+                </div>
+                <div style="text-align:center; margin-top:2%">
+                    <a href="@Url.Action("RegistrarUsuario","Home")" class="text-center">¿No tienes una cuenta?</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

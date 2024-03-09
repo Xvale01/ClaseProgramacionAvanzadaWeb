@@ -7,9 +7,6 @@
 
 <div class="hold-transition login-page">
     <div class="login-box">
-        <div class="login-logo">
-            <a href="../../index2.html"><b>Admin</b>LTE</a>
-        </div>
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Inicie sesión con su cuenta</p>
@@ -38,9 +35,12 @@
                     </div>
                 }
                 <br />
-                <p class="mb-0">
+                <div style="text-align:center; margin-top: 2%">
+                    <a href="@Url.Action("RecuperarAcceso","Home")" class="text-center">¿Olvidaste la contraseña?</a>
+                </div>
+                <div style="text-align:center; margin-top: 2%">
                     <a href="@Url.Action("RegistrarUsuario","Home")" class="text-center">¿Aún no tienes una cuenta?</a>
-                </p>
+                </div>
             </div>
         </div>
     </div>

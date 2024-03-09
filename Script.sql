@@ -73,15 +73,15 @@ BEGIN
 	BEGIN
 
 		DECLARE @Estado BIT = 1,
-				@IdRol  SMALLINT = 1
+				@IdRol  SMALLINT = 1,
+				@EsTemporal BIT = 0
 
-		INSERT INTO dbo.tUsuario(Correo,Contrasenna,Nombre,IdRol,Estado)
-		VALUES (@Correo,@Contrasenna,@NombreUsuario,@IdRol,@Estado)
+		INSERT INTO dbo.tUsuario(Correo,Contrasenna,Nombre,IdRol,Estado,EsTemporal)
+		VALUES (@Correo,@Contrasenna,@NombreUsuario,@IdRol,@Estado,@EsTemporal)
 
 	END
 
 END
-GO
 
 
 
@@ -92,7 +92,7 @@ CREATE PROCEDURE [dbo].[IniciarSesion]
 AS
 BEGIN
 
-	SELECT	IdUsuario,Correo,U.Nombre 'NombreUsuario',U.IdRol,R.Nombre 'NombreRol',Estado
+	SELECT	IdUsuario,Correo,U.Nombre 'NombreUsuario',U.IdRol,R.Nombre 'NombreRol',Estado, EsTemporal
 	  FROM	tUsuario U
 	  INNER JOIN tRol R ON U.IdRol = R.IdRol
 	  WHERE	Correo = @Correo
@@ -100,12 +100,41 @@ BEGIN
 		AND Estado = 1
 
 END
+
+
+
+
+CREATE PROCEDURE RecuperarAcceso
+
+	@Correo VARCHAR(200),
+	@Contrasenna VARCHAR(200)
+
+AS
+BEGIN 
+
+	DECLARE @Consecutivo BIGINT 
+
+	SELECT @Consecutivo = IdUsuario
+	FROM tUsuario
+	WHERE Correo = @Correo
+	AND Estado = 1
+	
+	IF @Consecutivo IS NOT NULL
+	BEGIN
+		UPDATE tUsuario
+		SET Contrasenna = @Contrasenna,
+			EsTemporal = 1
+		WHERE Correo = @Correo	
+	END
+
+	SELECT IdUsuario, Correo, U.Nombre 'NombreUsuario', U.IdRol, R.Nombre 'NombreRol',Estado, EsTemporal 
+	FROM tUsuario U
+	INNER JOIN tRol R ON U.IdRol = R.IdRol
+	WHERE Correo = @Correo
+	AND Estado = 1
+
+END 
 GO
-
-
-
-
-
 
 
 /* --------------------------------------- CONSULTAS -------------------------------------- */

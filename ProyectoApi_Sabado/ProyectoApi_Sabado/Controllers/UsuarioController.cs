@@ -63,6 +63,42 @@ namespace ProyectoApi_Sabado.Controllers
 
 
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("RecuperarAcceso")]
+        public IActionResult RecuperarAcceso(Usuario entidad)
+        {
+            using (var db = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                UsuarioRespuesta respuesta = new UsuarioRespuesta();
+
+                // Actualiza la contraseña por una contraseña temporal
+                string NuevaContrasennaTemporal = _utilitariosModel.GenerarContraseñaTemporal();
+                string Contrasenna = _utilitariosModel.Encrypt(NuevaContrasennaTemporal);
+
+                var resultado = db.Query<Usuario>("RecuperarAcceso",
+                new { entidad.Correo, Contrasenna },
+                commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                if (resultado == null)
+                {
+                    respuesta.Codigo = "-1";
+                    respuesta.Mensaje = "Sus credenciales no son correctos";
+                }
+                else
+                {
+                    // Enviar el correo
+                    _utilitariosModel.EnviarCorreo(resultado.Correo!, "Nueva Contraseña!!", NuevaContrasennaTemporal);
+                    respuesta.Dato = resultado;
+                }
+
+                return Ok(respuesta);
+
+            }
+        }
+
+
+
 
 
     }

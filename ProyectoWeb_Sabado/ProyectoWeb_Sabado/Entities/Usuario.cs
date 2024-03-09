@@ -10,6 +10,9 @@
         public string? NombreRol { get; set; }
         public string? Token { get; set; }
         public bool Estado { get; set; }
+        public bool EsTemporal { get; set; }
+
+
     }
 
     public class UsuarioRespuesta

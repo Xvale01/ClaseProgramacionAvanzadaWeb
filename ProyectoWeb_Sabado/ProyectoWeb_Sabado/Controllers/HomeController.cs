@@ -63,9 +63,33 @@ namespace ProyectoWeb_Sabado.Controllers
                 ViewBag.MsjPantalla = resp?.Mensaje;
                 return View();
             }
-
-
         }
 
+        [HttpGet]
+        public IActionResult RecuperarAcceso()
+        {
+            HttpContext.Session.Clear();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecuperarAcceso(Usuario entidad)
+        {
+            var resp = _usuarioModel.RecuperarAcceso(entidad);
+
+            if (resp?.Codigo == "00")
+            {
+                if ((bool)(resp?.Dato?.EsTemporal!))
+                    return RedirectToAction("CambiarContraseña", "Home");
+                
+                HttpContext.Session.SetString("Login", "true");
+                return RedirectToAction("IniciarSesion", "Home");
+            }
+            else
+            {
+                ViewBag.MsjPantalla = resp?.Mensaje;
+                return View();
+            }
+        }
     }
 }

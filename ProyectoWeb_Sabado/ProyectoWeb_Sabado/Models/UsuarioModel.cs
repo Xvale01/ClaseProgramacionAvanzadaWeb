@@ -28,5 +28,17 @@ namespace ProyectoWeb_Sabado.Models
 
             return null;
         }
+
+        public UsuarioRespuesta? RecuperarAcceso(Usuario entidad)
+        {
+            string url = _configuration.GetSection("settings:UrlWebApi").Value + "api/Usuario/RecuperarAcceso";
+            JsonContent body = JsonContent.Create(entidad);
+            var resp = _httpClient.PostAsync(url, body).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return resp.Content.ReadFromJsonAsync<UsuarioRespuesta>().Result;
+
+            return null;
+        }
     }
 }
