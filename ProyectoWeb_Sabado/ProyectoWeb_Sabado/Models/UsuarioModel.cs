@@ -3,26 +3,30 @@ using ProyectoWeb_Sabado.Services;
 
 namespace ProyectoWeb_Sabado.Models
 {
-    public class UsuarioModel : IUsuarioModel
+    public class UsuarioModel(HttpClient _httpClient, IConfiguration _configuration) : IUsuarioModel
     {
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
-        public UsuarioModel(HttpClient httpClient, IConfiguration configuration)
+        public Respuesta? RegistrarUsuario(Usuario entidad)
         {
-            _httpClient = httpClient;
-            _configuration = configuration;
-        }
-
-        public int RegistrarUsuario(Usuario entidad)
-        {
-            string url = _configuration.GetSection("Parametros:UrlWebApi").Value + "api/Usuario/RegistrarUsuario";
+            string url = _configuration.GetSection("settings:UrlWebApi").Value + "api/Usuario/RegistrarUsuario";
             JsonContent body = JsonContent.Create(entidad);
             var resp = _httpClient.PostAsync(url, body).Result;
 
             if (resp.IsSuccessStatusCode)
-                return resp.Content.ReadFromJsonAsync<int>().Result;
+                return resp.Content.ReadFromJsonAsync<Respuesta>().Result;
 
-            return 0;
+            return null;
+        }
+
+        public UsuarioRespuesta? IniciarSesion(Usuario entidad)
+        {
+            string url = _configuration.GetSection("settings:UrlWebApi").Value + "api/Usuario/IniciarSesion";
+            JsonContent body = JsonContent.Create(entidad);
+            var resp = _httpClient.PostAsync(url, body).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return resp.Content.ReadFromJsonAsync<UsuarioRespuesta>().Result;
+
+            return null;
         }
     }
 }

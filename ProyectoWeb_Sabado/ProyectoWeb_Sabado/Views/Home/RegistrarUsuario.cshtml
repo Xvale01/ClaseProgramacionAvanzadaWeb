@@ -11,10 +11,10 @@
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Registre una cuenta</p>
 
-                @using (Html.BeginForm("RegistrarUsuario","Home", FormMethod.Post))
+                @using (Html.BeginForm("RegistrarUsuario", "Home", FormMethod.Post))
                 {
                     <div class="input-group mb-3">
-                        @Html.TextBoxFor(m => m.correo, new { @class="form-control", @placeholder = "Correo Electrónico" })                        
+                        @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", @placeholder = "Correo Electrónico", @required = "true" })
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        @Html.TextBoxFor(m => m.nombre, new { @class = "form-control", @placeholder = "Nombre" })
+                        @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control", @placeholder = "Nombre", @required = "true" })
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -30,13 +30,20 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        @Html.TextBoxFor(m => m.contrasenna, new { @class = "form-control", @placeholder = "Contraseña", @type = "Password" })
+                        @Html.TextBoxFor(m => m.Contrasenna, new { @class = "form-control", @placeholder = "Contraseña", @type = "Password", @required = "true" })
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
                     </div>
+                    @if (ViewBag.MsjPantalla != null)
+                    {
+                        <div class="alert alert-warning" role="alert" style="text-align:center">
+                            @ViewBag.MsjPantalla
+                        </div>
+                    }
+
                     <div>
                         <div>
                             <button type="submit" class="btn btn-primary btn-block">Register</button>

@@ -3,7 +3,7 @@
     public interface IUtilitariosModel
     {
 
-        public string GenerarToken(string cedula);
+        public string GenerarToken(string correo);
 
     }
 }

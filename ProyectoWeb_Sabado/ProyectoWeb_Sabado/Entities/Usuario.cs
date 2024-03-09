@@ -2,10 +2,22 @@
 {
     public class Usuario
     {
-        public string correo { get; set; } 
-        public string contrasenna { get; set; } 
-        public string nombre { get; set; } 
-        public short idRol { get; set; }
-        public bool estado { get; set; }
+        public long IdUsuario { get; set; }
+        public string? Correo { get; set; }
+        public string? Contrasenna { get; set; }
+        public string? NombreUsuario { get; set; }
+        public short IdRol { get; set; }
+        public string? NombreRol { get; set; }
+        public string? Token { get; set; }
+        public bool Estado { get; set; }
+    }
+
+    public class UsuarioRespuesta
+    {
+        public string? Codigo { get; set; }
+        public string? Mensaje { get; set; }
+        public Usuario? Dato { get; set; }
+        public List<Usuario>? Datos { get; set; }
+
     }
 }
