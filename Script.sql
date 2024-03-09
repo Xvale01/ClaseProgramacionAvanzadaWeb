@@ -107,7 +107,8 @@ END
 CREATE PROCEDURE RecuperarAcceso
 
 	@Correo VARCHAR(200),
-	@Contrasenna VARCHAR(200)
+	@Contrasenna VARCHAR(200),
+	@EsTemporal BIT
 
 AS
 BEGIN 
@@ -123,7 +124,7 @@ BEGIN
 	BEGIN
 		UPDATE tUsuario
 		SET Contrasenna = @Contrasenna,
-			EsTemporal = 1
+			EsTemporal = @EsTemporal
 		WHERE Correo = @Correo	
 	END
 
