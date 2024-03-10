@@ -11,7 +11,9 @@
         public string? Token { get; set; }
         public bool Estado { get; set; }
         public bool EsTemporal { get; set; }
-
+        public string? ContrasennaTemporal { get; set; }
+        public short IdCategoria { get; set; }
+        public string? NombreCategoria { get; set; }
 
     }
 

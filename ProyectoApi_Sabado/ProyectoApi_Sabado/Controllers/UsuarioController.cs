@@ -106,7 +106,7 @@ namespace ProyectoApi_Sabado.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPut]
         [Route("CambiarContrasenna")]
         public IActionResult CambiarContrasenna(Usuario entidad)
         {
@@ -116,11 +116,10 @@ namespace ProyectoApi_Sabado.Controllers
 
                 // Actualiza la contraseña por una contraseña temporal
 
-                string Contrasenna = _utilitariosModel.Encrypt(entidad.Contrasenna);
                 bool EsTemporal = false;
 
-                var resultado = db.Query<Usuario>("RecuperarAcceso",
-                new { entidad.Correo, Contrasenna, EsTemporal },
+                var resultado = db.Query<Usuario>("CambiarContrasenna",
+                new { entidad.Correo, entidad.Contrasenna, entidad.ContrasennaTemporal, EsTemporal },
                 commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 if (resultado == null)

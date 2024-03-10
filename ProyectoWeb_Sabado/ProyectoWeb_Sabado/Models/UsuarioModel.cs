@@ -40,5 +40,17 @@ namespace ProyectoWeb_Sabado.Models
 
             return null;
         }
+
+        public UsuarioRespuesta? CambiarContrasenna(Usuario entidad)
+        {
+            string url = _configuration.GetSection("settings:UrlWebApi").Value + "api/Usuario/CambiarContrasenna";
+            JsonContent body = JsonContent.Create(entidad);
+            var resp = _httpClient.PutAsync(url, body).Result;
+
+            if (resp.IsSuccessStatusCode)
+                return resp.Content.ReadFromJsonAsync<UsuarioRespuesta>().Result;
+
+            return null;
+        }
     }
 }
